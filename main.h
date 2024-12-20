@@ -10,5 +10,5 @@ struct typedef pid_s
 
 int main(int ac, char **av);
 int main(void);
-
+int main(int ac, char **av, char **env);
 #endif
