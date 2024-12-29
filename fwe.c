@@ -13,8 +13,9 @@ int main(void)
 	char *argv[] = {"/bin/ls", "-l", "/tmp", NULL};
 	int status;
 	int exec_result;
+	int i;
 
-	for (int i = 0; i < 5; i++)
+	for (i = 0; i < 5; i++)
 	{
 		child_pid = fork();
 		if (child_pid == -1)
