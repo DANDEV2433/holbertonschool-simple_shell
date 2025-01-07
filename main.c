@@ -1,17 +1,19 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
 #include "main.h"
+
 /**
 * handle_sigint - Handles the SIGINT signal (Ctrl+C).
 * @sig: The signal received, but not used here.
 */
 void handle_sigint(int sig)
 {
-	(void)sig; /*Évite l'avertissement si sig n'est pas utilisé*/
-	printf("\nExiting shell...\n");
+	(void)sig; /* Évite les avertissements */
+	write(STDOUT_FILENO, "\n", 1);
 	exit(0);
 }
 /**
@@ -31,6 +33,7 @@ char *parse_find(char *input, char *argv[])
 	i++;
 	argv[i] = strtok(NULL, " ");
 	}
+
 	if (argv[0][0] == '/')/*Si le chemin absolu est fourni*/
 	{
 	if (access(argv[0], X_OK) == 0)
@@ -45,7 +48,9 @@ char *parse_find(char *input, char *argv[])
 	}
 	path_env = _getenv("PATH");/*La valeur de la variable d'environnement PATH*/
 	if (!path_env)/*Si PATH n'est pas défini*/
-	return (NULL);
+	{
+		return (NULL);
+	}
 	return (find_command_in_path(argv, path_env));
 }
 /**
@@ -54,17 +59,20 @@ char *parse_find(char *input, char *argv[])
  */
 int main(void)
 {
-	char *input = NULL;/*Pointeur pour stocker l'entrée utilisateur*/
 	char *argv[1000];/* 1ère commande, 2ème fin des arguments(NULL)*/
 	char *command_path;
+	char *input = NULL;
 
 	signal(SIGINT, handle_sigint);
-	
+
 	while (1)
 	{
 	input = get_input();/*Demande d'entrée à l'utilisateur*/
 	if (input == NULL)/*Si l'entrée est NULL (échec de getline)*/
+	{
+	free(input);
 	continue;
+	}
 	if (strcmp(input, "") == 0)/*Si l'entrée est vide*/
 	{
 	free(input);
@@ -80,7 +88,6 @@ int main(void)
 	}
 
 	argv[0] = command_path;/*Remplace la commande par son chemin absolu*/
-
 	handle_command(argv, command_path);
 	free(command_path);
 	free(input);
