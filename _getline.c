@@ -46,6 +46,7 @@ int  main(void)
 		args[arg_count] = NULL;
 
 		pid_t pid = fork();
+
 		if (pid == -1)
 		{
 			perror("fork");
@@ -65,6 +66,7 @@ int  main(void)
 		else
 		{
 			int status;
+
 			waitpid(pid, &status, 0);
 		}
 
