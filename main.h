@@ -3,18 +3,22 @@
 
 #include <sys/types.h>
 
+extern char **environ;
 
+/**
+* struct pid_s - Structure pour représenter un processus.
+* @pid: Identifiant du processus (PID)
+*/
 typedef struct pid_s
 {
 	int pid;
-}pid_s;
+} pid_s;
 
-extern char **environ;
-
-void execute_command(char *argv[]);
 char *_getenv(const char *name);
 char *get_input(void);
-char *parse_find(char *input, char *argv[]);
 void handle_command(char *argv[], char *command_path);
+char *build_full_path(char *directory, char *command);
+char *find_command_in_path(char *argv[], char *path_env);
+char *parse_find(char *input, char *argv[]);
 
 #endif
