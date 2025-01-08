@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,17 +13,7 @@
  */
 char *_getenv(const char *name)
 {
-	int i;
-	size_t len = strlen(name);
-
-	for (i = 0; environ[i] != NULL; i++)
-	{
-	if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
-	{
-	return (environ[i] + len + 1);
-	}
-}
-	return (NULL);
+	return (getenv(name));
 }
 
 /**
@@ -31,10 +22,10 @@ char *_getenv(const char *name)
  */
 char *get_input(void)
 {
-	char *input = NULL;
 	size_t len = 0;
+	char *input = NULL;
 
-	printf("$ ");
+	printf(":) ");
 	fflush(stdout);
 	if (getline(&input, &len, stdin) == -1)
 	{
@@ -62,7 +53,7 @@ char *build_full_path(char *directory, char *command)
 	return (NULL);
 	}
 
-	sprintf(full_path, "%s/%s", directory, command);/*Construit chemin complet*/
+	snprintf(full_path, 1024, "%s/%s", directory, command);/*Const chem1 complet*/
 	return (full_path);
 }
 
@@ -78,10 +69,10 @@ char *find_command_in_path(char *argv[], char *path_env)
 	char *directory = strtok(path_copy, ":");
 	char *full_path;
 
-    if (path_copy == NULL)
-    {
-    return (NULL);
-    }
+	if (path_copy == NULL)
+	{
+	return (NULL);
+	}
 	while (directory != NULL)
 	{
 	full_path = build_full_path(directory, argv[0]);
@@ -115,22 +106,19 @@ void handle_command(char *argv[], char *command_path)
 	if (pid == -1)
 	{
 	perror("error");
-	free(command_path);
 	exit(EXIT_FAILURE);
 	}
 	if (pid == 0)
 	{
-	if (execve(argv[0], argv, environ) == -1)
+	if (execve(command_path, argv, environ) == -1)
 	{
 	perror("error");
-	free(command_path);
 	exit(EXIT_FAILURE);
 	}
 	}
 	else
 	{
 	wait(&status);
-	free(command_path);
 	}
 }
 
