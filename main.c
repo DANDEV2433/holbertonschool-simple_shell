@@ -92,6 +92,20 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 	wait(NULL);
 	}
 }
+/**
+ * handle_exit - Handles the exit command.
+ * @line: The line containing the command.
+ * Return: 1 if 'exit' was detected, 0 otherwise.
+ */
+int handle_exit(char *line)
+{
+	if (strcmp(line, "exit") == 0)
+	{
+	free(line);  /* Free the allocated memory */
+	exit(0);     /* Exit the program with success */
+	}
+	return (0);  /* Return 0 if it's not an 'exit' command */
+}
 
 /**
  * main - Simple shell.
@@ -120,6 +134,8 @@ int main(int argc __attribute__((unused)), char *argv[])
 	break;
 	}
 	line[strcspn(line, "\n")] = '\0'; /* Remove newline */
+	if (handle_exit(line))
+	continue;
 	if (line[0] == '\0')
 	continue;
 	i = 0;
