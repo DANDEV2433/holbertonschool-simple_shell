@@ -29,17 +29,28 @@ void handle_sigint(int sig)
 char *find_command(char *command)
 {
 	char *path_env = getenv("PATH");
-	char *path_env_copy = strdup(path_env);
-	char *path = strtok(path_env_copy, ":");
+	char *path_env_copy, *path;
 	static char full_path[MAX_PATH_LEN];
 
+	if (!path_env)
+	{
+	fprintf(stderr, "Error: PATH not set\n");
+	return (NULL);
+	}
 	/* Command is already an absolute path or executable in current dir */
 	if (command[0] == '/' || access(command, X_OK) == 0)
 	{
-	free(path_env_copy);
 	return (command);
 	}
+	/* Make a copy of PATH to avoid modifying the original */
+	path_env_copy = strdup(path_env);
+	if (!path_env_copy)
+	{
+	perror("strdup");
+	return (NULL);
+	}
 
+	path = strtok(path_env_copy, ":");
 	while (path)
 	{
 	snprintf(full_path, MAX_PATH_LEN, "%s/%s", path, command);
@@ -50,6 +61,7 @@ char *find_command(char *command)
 	}
 	path = strtok(NULL, ":");
 	}
+
 	free(path_env_copy);
 	return (NULL);
 }
@@ -65,9 +77,9 @@ void execute_command(char *argv[], char *command_path)
 
 	if (pid == 0) /* Child process */
 	{
-	if (execve(command_path, argv, NULL) == -1)
+	if (execve(command_path, argv, environ) == -1)
 	{
-	perror("error");
+	perror("execve");
 	exit(EXIT_FAILURE);
 	}
 	}
@@ -95,6 +107,7 @@ int main(void)
 
 	while (1)
 	{
+	i = 0;
 	printf(PROMPT);
 	if (getline(&line, &len, stdin) == -1)
 	{
@@ -106,10 +119,12 @@ int main(void)
 	continue; /* Ignore empty input */
 
 	/* Parse the command and arguments */
-	i = 0;
 	argv[i] = strtok(line, " ");
 	while (argv[i] != NULL)
 	argv[++i] = strtok(NULL, " ");
+
+	if (argv[0] == NULL)
+	continue;
 
 	command = find_command(argv[0]);
 	if (!command)
@@ -118,12 +133,9 @@ int main(void)
 	}
 	else
 	{
-	/* Execute the command */
 	execute_command(argv, command);
 	}
 	}
-
 	free(line);
 	return (0);
 }
-
