@@ -5,21 +5,20 @@
 /**
  * split_line - function to read a line
  * @line: line to read
- * return: the list of args
+ * Return: the list of args
  */
 char **split_line(char *line)
 {
 	int capacity = 10;
-	char **args = malloc(sizeof(char *) *capacity);
+	char **args = malloc(sizeof(char *) * capacity);
+	char *token = strtok(line, " ");
+	int arg_count = 0;
 
 	if (!args)
 	{
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-
-	char *token = strtk(line, " ");
-	int arg_count = 0;
 
 	while (token != NULL)
 	{
@@ -33,5 +32,5 @@ char **split_line(char *line)
 	}
 
 	args[arg_count] = NULL;
-	return args;
+	return (args);
 }
