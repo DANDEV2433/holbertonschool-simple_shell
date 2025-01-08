@@ -4,93 +4,126 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <sys/wait.h>
 #include "main.h"
 
+#define PROMPT ":) "
+#define MAX_PATH_LEN 1024
+
 /**
-* handle_sigint - Handles the SIGINT signal (Ctrl+C).
-* @sig: The signal received, but not used here.
-*/
+ * handle_sigint - Handles the SIGINT signal (Ctrl+C).
+ * @sig: The signal number.
+ */
 void handle_sigint(int sig)
 {
-	(void)sig; /* Évite les avertissements */
+	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
 	exit(0);
 }
+
 /**
-* parse_find - parse the input string into arguments, finds the command in PATH
-* @argv: array of strings to store arguments
-* @input: the input string
-* Return: the path of the command or NULL
-*/
-char *parse_find(char *input, char *argv[])
+ * find_command - Search for a command in the PATH.
+ * @command: Command to find.
+ * Return: The full path of the command or NULL if not found.
+ */
+char *find_command(char *command)
 {
-	int i = 0;
-	char *path_env;
+	char *path_env = getenv("PATH");
+	char *path_env_copy = strdup(path_env);
+	char *path = strtok(path_env_copy, ":");
+	static char full_path[MAX_PATH_LEN];
 
-	argv[i] = strtok(input, " ");
-	while (argv[i] != NULL)
+	/* Command is already an absolute path or executable in current dir */
+	if (command[0] == '/' || access(command, X_OK) == 0)
 	{
-	i++;
-	argv[i] = strtok(NULL, " ");
+	free(path_env_copy);
+	return (command);
 	}
 
-	if (argv[0][0] == '/')/*Si le chemin absolu est fourni*/
+	while (path)
 	{
-	if (access(argv[0], X_OK) == 0)
+	snprintf(full_path, MAX_PATH_LEN, "%s/%s", path, command);
+	if (access(full_path, X_OK) == 0)
 	{
-	return (strdup(argv[0]));/*Retourne le chemin complet*/
+	free(path_env_copy);
+	return (full_path);
 	}
-	else
-	{
-	perror("Command not found");
+	path = strtok(NULL, ":");
+	}
+	free(path_env_copy);
 	return (NULL);
-	}
-	}
-	path_env = _getenv("PATH");/*La valeur de la variable d'environnement PATH*/
-	if (!path_env)/*Si PATH n'est pas défini*/
-	{
-		return (NULL);
-	}
-	return (find_command_in_path(argv, path_env));
 }
+
 /**
- * main - Shell program input loop.
- * Return: 0.
+ * execute_command - Execute a command.
+ * @argv: Array of command and arguments.
+ * @command_path: Full path of the command.
+ */
+void execute_command(char *argv[], char *command_path)
+{
+	pid_t pid = fork();
+
+	if (pid == 0) /* Child process */
+	{
+	if (execve(command_path, argv, NULL) == -1)
+	{
+	perror("error");
+	exit(EXIT_FAILURE);
+	}
+	}
+	else if (pid < 0) /* Fork error */
+	{
+	perror("fork");
+	}
+	else /* Parent process */
+	{
+	wait(NULL);
+	}
+}
+
+/**
+ * main - Simple shell.
+ * Return: 0 on success.
  */
 int main(void)
 {
-	char *argv[1000];/* 1ère commande, 2ème fin des arguments(NULL)*/
-	char *command_path;
-	char *input = NULL;
+	char *line = NULL, *command, *argv[100];
+	size_t len = 0;
+	int i;
 
-	signal(SIGINT, handle_sigint);
+	signal(SIGINT, handle_sigint); /* Handle Ctrl+C */
 
 	while (1)
 	{
-	input = get_input();/*Demande d'entrée à l'utilisateur*/
-	if (input == NULL)/*Si l'entrée est NULL (échec de getline)*/
+	printf(PROMPT);
+	if (getline(&line, &len, stdin) == -1)
 	{
-	free(input);
-	continue;
+	free(line);
+	break;
 	}
-	if (strcmp(input, "") == 0)/*Si l'entrée est vide*/
+	line[strcspn(line, "\n")] = '\0'; /* Remove newline */
+	if (line[0] == '\0')
+	continue; /* Ignore empty input */
+
+	/* Parse the command and arguments */
+	i = 0;
+	argv[i] = strtok(line, " ");
+	while (argv[i] != NULL)
+	argv[++i] = strtok(NULL, " ");
+
+	command = find_command(argv[0]);
+	if (!command)
 	{
-	free(input);
-	continue;
+	fprintf(stderr, "%s: command not found\n", argv[0]);
 	}
-	/*Recherche du chemin de la commande*/
-	command_path = parse_find(input, argv);
-	if (command_path == NULL)
+	else
 	{
-	printf("Command not found: %s\n", argv[0]);
-	free(input);
-	continue;
+	/* Execute the command */
+	execute_command(argv, command);
+	}
 	}
 
-	argv[0] = command_path;/*Remplace la commande par son chemin absolu*/
-	handle_command(argv, command_path);
-	free(command_path);
-	free(input);
-	}
+	free(line);
 	return (0);
 }
+
