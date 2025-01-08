@@ -106,25 +106,22 @@ int main(int argc __attribute__((unused)), char *argv[])
 	size_t len = 0;
 	char *command = NULL;
 	char *args[100]; /* Temporary array to store parsed arguments */
-	int i;
+	int i = 0;
 
 	signal(SIGINT, handle_sigint); /* Handle Ctrl+C */
 	while (1)
 	{
 	if (isatty(STDIN_FILENO)) /* Interactive mode */
 	printf(PROMPT);
-
 	if (getline(&line, &len, stdin) == -1)
 	{
 	if (isatty(STDIN_FILENO))
 	printf("\n");
 	break;
 	}
-
 	line[strcspn(line, "\n")] = '\0'; /* Remove newline */
 	if (line[0] == '\0')
 	continue;
-
 	i = 0;
 	args[i] = strtok(line, " ");
 	while (args[i] != NULL && i < 99)
@@ -133,7 +130,6 @@ int main(int argc __attribute__((unused)), char *argv[])
 
 	if (args[0] == NULL)
 	continue;
-
 	command = find_command(args[0]);
 	if (!command)
 	fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
