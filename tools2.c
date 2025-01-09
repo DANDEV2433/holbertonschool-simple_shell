@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /**
  * split_line - function to read a line
@@ -53,4 +54,14 @@ void handle_env(char *args[])
 			env++;
 		}
 	}
+}
+
+/**
+ * handle_sigint - Handles the SIGINT signal (Ctrl+C).
+ * @sig: The signal number.
+ */
+void handle_sigint(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
 }

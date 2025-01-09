@@ -11,16 +11,6 @@
 #define MAX_PATH_LEN 1024
 
 /**
- * handle_sigint - Handles the SIGINT signal (Ctrl+C).
- * @sig: The signal number.
- */
-void handle_sigint(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
-}
-
-/**
  * find_command - Search for a command in the PATH.
  * @command: Command to find.
  * Return: The full path of the command or NULL if not found.
@@ -121,6 +111,10 @@ int main(int argc __attribute__((unused)), char *argv[])
 	return (0);
 }
 
+/**
+ * process_input - process input
+ * @argv: an array of command-line arguments
+ */
 void process_input(char *argv[])
 {
 	char *line = NULL;
@@ -155,7 +149,7 @@ void process_input(char *argv[])
 
 		command = find_command(args[0]);
 		if (!command)
-			fprintf(stderr, "%s: 1: %: not found\n", argv[0], args[0]);
+			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
 		else
 			execute_command(args, command, argv[0]);
 	}
