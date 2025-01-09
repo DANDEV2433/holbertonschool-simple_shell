@@ -34,3 +34,23 @@ char **split_line(char *line)
 	args[arg_count] = NULL;
 	return (args);
 }
+
+/**
+ * handle_env - handle environment
+ * @args: arguments
+ */
+void handle_env(char *args[])
+{
+	/* Check if the command is 'env'*/
+	if (args[0] != NULL && strcmp(args[0], "env") == 0)
+	{
+		extern  char **environ;
+		char **env = environ;
+
+		while (*env)/* Goes through the environment varibales */
+		{
+			printf("%s\n", *env); /* Print each environment variable */
+			env++;
+		}
+	}
+}
