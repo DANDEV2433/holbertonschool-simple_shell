@@ -116,42 +116,48 @@ int handle_exit(char *line)
  */
 int main(int argc __attribute__((unused)), char *argv[])
 {
+	signal(SIGINT, handle_sigint);
+	process_input(argv);
+	return (0);
+}
+
+void process_input(char *argv[])
+{
 	char *line = NULL;
 	size_t len = 0;
+	char *args[100];
 	char *command = NULL;
-	char *args[100]; /* Temporary array to store parsed arguments */
 	int i = 0;
 
-	signal(SIGINT, handle_sigint); /* Handle Ctrl+C */
 	while (1)
 	{
-	if (isatty(STDIN_FILENO)) /* Interactive mode */
-	printf(PROMPT);
-	if (getline(&line, &len, stdin) == -1)
-	{
-	if (isatty(STDIN_FILENO))
-	printf("\n");
-	break;
-	}
-	line[strcspn(line, "\n")] = '\0'; /* Remove newline */
-	if (handle_exit(line))
-	continue;
-	if (line[0] == '\0')
-	continue;
-	i = 0;
-	args[i] = strtok(line, " ");
-	while (args[i] != NULL && i < 99)
-	args[++i] = strtok(NULL, " ");
-	args[i] = NULL;
+		if (isatty(STDIN_FILENO))
+			printf(PROMPT);
 
-	if (args[0] == NULL)
-	continue;
-	command = find_command(args[0]);
-	if (!command)
-	fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
-	else
-	execute_command(args, command, argv[0]);
+		if (getline(&line, &len, stdin) == -1)
+		{
+			if (isatty(STDIN_FILENO))
+				printf("\n");
+			break;
+		}
+
+		line[strcspn(line, "\n")] = '\0';
+		if (handle_exit(line) || line[0] == '\0')
+			continue;
+
+		args[i] = strtok(line, " ");
+		while (args[i] != NULL && i < 99)
+			args[++i] = strtok(NULL, " ");
+		args[i] = NULL;
+
+		if (args[0] == NULL)
+			continue;
+
+		command = find_command(args[0]);
+		if (!command)
+			fprintf(stderr, "%s: 1: %: not found\n", argv[0], args[0]);
+		else
+			execute_command(args, command, argv[0]);
 	}
 	free(line);
-	return (0);
 }
