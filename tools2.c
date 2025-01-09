@@ -3,6 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#define MAX_ARGS 100
+#define PROMPT ":) "
+
 /**
  * split_line - function to read a line
  * @line: line to read
@@ -10,9 +13,8 @@
  */
 char **split_line(char *line)
 {
-	int capacity = 10;
-	char **args = malloc(sizeof(char *) * capacity);
-	char *token = strtok(line, " ");
+	char **args = malloc(sizeof(char *) * MAX_ARGS);
+	char *token;
 	int arg_count = 0;
 
 	if (!args)
@@ -21,13 +23,9 @@ char **split_line(char *line)
 		exit(EXIT_FAILURE);
 	}
 
-	while (token != NULL)
+	token = strtok(line, " ");
+	while (token && arg_count < MAX_ARGS - 1)
 	{
-		if (arg_count >= capacity)
-		{
-			fprintf(stderr, "Erreur: trop d'arguments (max %d)\n", capacity);
-			exit(EXIT_FAILURE);
-		}
 		args[arg_count++] = token;
 		token = strtok(NULL, " ");
 	}
@@ -64,4 +62,6 @@ void handle_sigint(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
+	printf(PROMPT);
+	fflush(stdout);
 }
