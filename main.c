@@ -41,18 +41,18 @@ char *find_command(char *command)
 	{
 	return (command);
 	}
-	/* Make a copy of PATH to avoid modifying the original */
-	path_env_copy = strdup(path_env);
+	path_env_copy = malloc(strlen(path_env) + 1);/*Allocate memory for a copy*/
 	if (!path_env_copy)
 	{
-	perror("strdup");
+	perror("malloc");
 	return (NULL);
 	}
+	strcpy(path_env_copy, path_env); /*copy string PATH in path_env_copy*/
 
 	path = strtok(path_env_copy, ":");
 	while (path)
 	{
-	snprintf(full_path, MAX_PATH_LEN, "%s/%s", path, command);
+	sprintf(full_path, "%s/%s", path, command);
 	if (access(full_path, X_OK) == 0)
 	{
 	free(path_env_copy);
