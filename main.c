@@ -123,6 +123,7 @@ void process_input(char *argv[])
 	size_t len = 0;
 	char **args;
 	char *command;
+	int i = 0;
 
 	while (1)
 	{
@@ -140,21 +141,24 @@ void process_input(char *argv[])
 		if (handle_exit(line) || line[0] == '\0')
 			continue;
 
-		args = split_line(line);
-		if (!args[0])
+		args[i] = strtok(line, " ");
+		while (args[i] != NULL && i < 99)
+			args[++i] = strtok(NULL, " ");
+		args[i] = NULL;
+		if (args[0] == NULL)
+			continue;
+
+		if (strcmp(args[0], "env") == 0)
 		{
-			free(args);
+			handle_env(args);
 			continue;
 		}
 
-		handle_env(args);
 		command = find_command(args[0]);
 		if (!command)
 			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
 		else
 			execute_command(args, command, argv[0]);
-
-		free(args);
 	}
 	free(line);
 }

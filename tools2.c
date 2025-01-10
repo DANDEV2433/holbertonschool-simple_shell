@@ -78,16 +78,14 @@ char *_getenv(const char *name)
 
 	for (i = 0; environ[i] != NULL; i++)
 	{
-	if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
-	{
-	/**
-	* Compare len/environ[i] with name to see if =, check next character is =.
-	*/
-	return (environ[i] + len + 1);
-	/**
-	* returns pointer to environment variable value, after =.
-	*/
+		if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
+		/**
+		* Compare len/environ[i] with name to see if =, check next character is =.
+		*/
+			return (environ[i] + len + 1);
+			/**
+			* returns pointer to environment variable value, after =.
+			*/
 	}
-}
-return (NULL);
+	return (NULL);
 }
