@@ -10,6 +10,11 @@ typedef struct pid_s
 
 void handle_sigint(int sig);
 char *find_command(char *command);
-void execute_command(char *argv[], char *command_path);
+void execute_command(char *argv[], char *command_path, char *program_name);
+int handle_exit(char *line);
+void handle_env(char *args[]);
+char **split_line(char *line);
+void process_input(char *argv[]);
+char *_getenv(const char *name);
 
 #endif
