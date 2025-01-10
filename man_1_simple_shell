@@ -1,0 +1,140 @@
+.TH SIMPLE_SHELL 1 "January 2023" "Version 1.0" "User Commands"
+.SH NAME
+hsh \- a basic UNIX command line interpreter
+
+.SH SYNOPSIS
+.B hsh
+.RI [command]
+
+.SH DESCRIPTION
+.B simple_shell
+is a minimalist UNIX command line interpreter that executes commands interactively. It displays a prompt, waits for the user to type a command, and then executes the command.
+
+.SH FEATURES
+The features of 
+.B simple_shell
+include:
+
+.IP * 2
+Displays a prompt and waits for the user to type a command.
+.IP * 2
+Executes commands with or without arguments.
+.IP * 2
+Handles errors and displays appropriate messages if a command cannot be found or executed.
+.IP * 2
+Handles the end-of-file (Ctrl+D) condition to gracefully exit the shell.
+.IP * 2
+Utilizes system calls 
+.B fork
+and 
+.B execve
+for command execution.
+
+.SH FUNCTIONS
+The following functions are defined in 
+.B main.h
+and used in 
+.B simple_shell
+:
+
+.IP * 2
+.B extern char **environ;
+\- A pointer to the environment variables.
+
+.IP * 2
+.B typedef struct pid_s
+{
+    int pid;
+} pid_s;
+\- A structure to hold process IDs.
+
+.IP * 2
+.B void handle_sigint(int sig);
+\- Handles the SIGINT signal (Ctrl+C).
+
+.IP * 2
+.B char *find_command(char *command);
+\- Searches for the command in the directories listed in the PATH environment variable.
+
+.IP * 2
+.B void execute_command(char *argv[], char *command_path, char *program_name);
+\- Executes the command found by `find_command`.
+
+.IP * 2
+.B int handle_exit(char *line);
+\- Handles the `exit` command to terminate the shell.
+
+.IP * 2
+.B int handle_env_builtin(char **args, char **environ);
+\- Handles the `env` built-in command to print the environment variables.
+
+.IP * 2
+.B char **split_line(char *line);
+\- Splits the input line into an array of arguments.
+
+.IP * 2
+.B void process_input(char *argv[]);
+\- Processes the input from the user and executes the appropriate command.
+
+.IP * 2
+.B char *_getenv(const char *name);
+\- Retrieves the value of an environment variable.
+
+.SH USAGE
+After compilation, you can run the shell using the following command:
+
+.EX
+.B ./hsh
+.EE
+
+.SH EXAMPLES
+Here are some examples of using 
+.B simple_shell
+:
+
+.EX
+$ ./hsh
+$ ls
+file1 file2 file3
+$ /bin/ls -l
+-rw-r--r-- 1 user user 123 Jan 1 12:00 file1
+-rw-r--r-- 1 user user 456 Jan 1 12:01 file2
+-rw-r--r-- 1 user user 789 Jan 1 12:02 file3
+$ echo "Hello, World!"
+Hello, World!
+$ /bin/echo "Hello, World!"
+Hello, World!
+$ ^D
+.EE
+
+.SH FILES
+The project files include:
+
+.IP * 2
+.B main.c
+\- Contains the main function that starts the shell execution.
+
+.IP * 2
+.B tools2.c
+\- Contains essential utility functions used by the shell.
+
+.SH FUTURE FEATURES
+Future features may include:
+
+.IP * 2
+Adding advanced features such as redirection, pipes, and script handling.
+.IP * 2
+Support for built-in commands and special characters.
+
+.SH LICENSE
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+.SH SEE ALSO
+.BR sh (1),
+.BR bash (1),
+.BR execve (2),
+.BR fork (2).
+
+AUTORS
+VILLESSOT - Julien
+DANIEL - Alexandre
