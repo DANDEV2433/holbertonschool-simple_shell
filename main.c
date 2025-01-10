@@ -1,4 +1,4 @@
-#define _GNU_SOURCEi
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -70,7 +70,7 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n", program_name, argv[0]);
-			exit(EXIT_FAILURE);
+			exit(127);
 		}
 	}
 	else if (pid < 0) /* Fork error */
