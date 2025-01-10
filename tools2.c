@@ -41,11 +41,11 @@ char **split_line(char *line)
  */
 void handle_env(char *args[])
 {
+	char **env = environ;
 	/* Check if the command is 'env'*/
 	if (args[0] != NULL && strcmp(args[0], "env") == 0)
 	{
-		char **env = environ;
-
+		printf("Handling env command...\n");
 		while (*env)/* Goes through the environment varibales */
 		{
 			printf("%s\n", *env); /* Print each environment variable */
