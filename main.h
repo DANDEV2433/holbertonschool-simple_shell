@@ -16,5 +16,6 @@ int handle_env_builtin(char **args, char **environ);
 char **split_line(char *line);
 void process_input(char *argv[]);
 char *_getenv(const char *name);
+int main(int argc __attribute__((unused)), char *argv[]);
 
 #endif
