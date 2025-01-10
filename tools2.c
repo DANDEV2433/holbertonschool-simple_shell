@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "main.h"
 
 #define MAX_ARGS 100
 #define PROMPT ":) "
@@ -43,7 +44,6 @@ void handle_env(char *args[])
 	/* Check if the command is 'env'*/
 	if (args[0] != NULL && strcmp(args[0], "env") == 0)
 	{
-		extern  char **environ;
 		char **env = environ;
 
 		while (*env)/* Goes through the environment varibales */
