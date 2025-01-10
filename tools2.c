@@ -45,7 +45,6 @@ void handle_env(char *args[])
 	/* Check if the command is 'env'*/
 	if (args[0] != NULL && strcmp(args[0], "env") == 0)
 	{
-		printf("Handling env command...\n");
 		while (*env)/* Goes through the environment varibales */
 		{
 			printf("%s\n", *env); /* Print each environment variable */
