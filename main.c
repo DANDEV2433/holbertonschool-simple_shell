@@ -51,7 +51,7 @@ char *find_command(char *command)
 	}
 
 	free(path_env_copy);
-return (NULL);
+	return (NULL);
 }
 
 /**
@@ -63,6 +63,8 @@ return (NULL);
 void execute_command(char *argv[], char *command_path, char *program_name)
 {
 	pid_t pid = fork();
+	int status;
+	int last_exitt_status = 0;
 
 	if (pid == 0) /* Child process */
 	{
@@ -76,7 +78,11 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 	else if (pid < 0) /* Fork error */
 		perror("fork");
 	else /* Parent process */
-		wait(NULL);
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXISTED(status))
+			last_exit_status = WEXITSTATUS(status);
+	}
 }
 /**
  * handle_exit - Handles the exit command.
@@ -88,7 +94,7 @@ int handle_exit(char *line)
 	if (strcmp(line, "exit") == 0)
 	{
 		free(line);  /* Free the allocated memory */
-		exit(0);     /* Exit the program with success */
+		exit(last_exit_status);     /* Exit the program with success */
 	}
 	return (0);  /* Return 0 if it's not an 'exit' command */
 }
