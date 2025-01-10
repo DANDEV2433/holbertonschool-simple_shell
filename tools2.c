@@ -38,19 +38,20 @@ char **split_line(char *line)
 /**
  * handle_env - handle environment
  * @args: arguments
+ * @environ: The environment variables
+ * Return: 1 if 'env' was handled or 0.
  */
-void handle_env(char *args[])
+int handle_env_builtin(char **args, char **environ)
 {
-	char **env = environ;
-	/* Check if the command is 'env'*/
-	if (args[0] != NULL && strcmp(args[0], "env") == 0)
+	if (args[0] && strcmp(args[0], "env") == 0)
 	{
-		while (*env)/* Goes through the environment varibales */
+		for (int i = 0; environ[i] != NULL; i++)
 		{
-			printf("%s\n", *env); /* Print each environment variable */
-			env++;
+			printf("%s\n", environ[i]); /* Print each environment variable */
 		}
+		return (1);
 	}
+	return (0);
 }
 
 /**
