@@ -20,6 +20,11 @@ Handles the end-of-file (Ctrl+D) condition to gracefully exit the shell.
 
 Utilizes system calls fork and execve for command execution.
 
+## Prototypes in main.h
+
+![Capture d'écran 2025-01-10 204405](https://github.com/user-attachments/assets/92fdd842-9ebc-46f7-9f3e-a1fe42f35b37)
+
+
 ## Compilation
 
 To compile the code, use the following command:
