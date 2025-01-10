@@ -21,7 +21,6 @@ char *find_command(char *command)
 	char *path_env_copy, *path;
 	static char full_path[MAX_PATH_LEN];
 
-	printf("PATH: %s\n", path_env ? path_env : "Not found");
 	if (!path_env)
 	{
 		fprintf(stderr, "Error: PATH not set\n");
@@ -43,7 +42,6 @@ char *find_command(char *command)
 	while (path)
 	{
 		sprintf(full_path, "%s/%s", path, command);
-		printf("Checking path: %s\n", full_path);
 		if (access(full_path, X_OK) == 0)
 		{
 			free(path_env_copy);
@@ -70,7 +68,6 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 	{
 		if (execve(command_path, argv, environ) == -1)
 		{
-			perror("execve failed");
 			fprintf(stderr, "%s: 1: %s: not found\n", program_name, argv[0]);
 			exit(127);
 		}
