@@ -65,3 +65,29 @@ void handle_sigint(int sig)
 	printf(PROMPT);
 	fflush(stdout);
 }
+
+/**
+ *_getenv - gets the value of an environment variable
+ * @name: the name of environment variable
+ * Return: the value of variable or NULL
+ */
+char *_getenv(const char *name)
+{
+	int i;
+	size_t len = strlen(name);
+
+	for (i = 0; environ[i] != NULL; i++)
+	{
+	if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
+	{
+	/**
+	* Compare len/environ[i] with name to see if =, check next character is =.
+	*/
+	return (environ[i] + len + 1);
+	/**
+	* returns pointer to environment variable value, after =.
+	*/
+	}
+}
+return (NULL);
+}
