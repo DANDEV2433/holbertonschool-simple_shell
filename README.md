@@ -1,112 +1,77 @@
-# _printf - Custom printf function
+# Simple Shell
 
 ## Description
-This project implements a custom `printf` function in C that handles a subset of standard `printf` conversion specifiers. It includes the following files:
-- _printf.c : Main implementation of the `_printf` function.
-- function_tools.c : File contains helper functions for _printf.c.
-- main.h : Header file containing function prototypes and struct definitions.
-## Compilation
+The simple_shell project is a basic implementation of a UNIX command line interpreter. It is a minimalist shell that executes commands interactively by displaying a prompt, waiting for the user to type a command, and then executing the command. This project aims to provide a practical understanding of the internal workings of command interpreters in UNIX systems.
 
-To compile the code, use the following command:
-```c
-"gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -Wno-format *.c"
-```
 ## Requirements 
 
 All files have been programmed and tested in an Ubuntu 20.04 LTS environment and compiled using gcc.
 the code respects the Betty style.pl and betty-doc.pl requirements.
 
-## Supported Conversion Specifiers
-The _printf function supports the following conversion specifiers:
+## Features
 
+Displays a prompt and waits for the user to type a command.
+
+Executes commands with or without arguments.
+
+Handles errors and displays appropriate messages if a command cannot be found or executed.
+
+Handles the end-of-file (Ctrl+D) condition to gracefully exit the shell.
+
+Utilizes system calls fork and execve for command execution.
+
+## Compilation
+
+To compile the code, use the following command:
 ```c
-%c: Print a character.
-
-%s: Print a string.
-
-%%: Print a percent symbol.
-
-%d: Print an integer.
-
-%i: Print an integer.
+"gcc -Wall -Wextra -Werror -pedantic simple_shell.c -o hsh"
 ```
-## Example usage of convertion specifiers
+## Usage
 
+Once compiled, you can run the shell using the following command:
 ```c
-_printf("Character: %c\n", 'A');
-output : Character: A
-
-_printf("String: %s\n", "Hello, World!");
-output : String: Hello, World!
-
-_printf("Decimal: %d\n", 12345);
-_printf("Integer: %i\n", -67890);
-output : Decimal: 12345
-         Integer: -67890
-
-_printf("Percent sign: %%\n");
-output : Percent sign: %
+./hsh
 ```
-## Struct Definition
-
-struct print_func: Structure which associates a format specifier (character) with a print function.
-exemple:
+Examples
 ```c
-/**
- * struct print_function - a function with specifier for printf
- * @specifier: char type pointer to specifier
- * @fct_pt: pointeur de fonction
- * Return: int
- */
-typedef struct print_function
-{
-	char specifier;
-	int (*fct_pt)(va_list args);
-} print_func;
+$ ./hsh
+$ ls
+file1 file2 file3
+$ /bin/ls -l
+-rw-r--r-- 1 user user 123 Jan 1 12:00 file1
+-rw-r--r-- 1 user user 456 Jan 1 12:01 file2
+-rw-r--r-- 1 user user 789 Jan 1 12:02 file3
+$ echo "Hello, World!"
+Hello, World!
+$ /bin/echo "Hello, World!"
+Hello, World!
+$ ^D
 ```
-## Prototype functions
-## _printf
--int _printf(const char *format, ...); : Prototype of the _printf function.
-Parses a format string, identifies format specifiers, and calls the appropriate functions to process each specifier.
+## Interactive mode
 
-Parameters :
-const char *format: Format string containing conversion specifiers.
+## Non interactive mode
 
-... : Variadic arguments to be printed according to the format specifiers.
+## Future Features
 
-Return: The total number of characters printed.
-### print_char
--int print_char(va_list args); : Prototype of the function to print a character.
-### print_string
--int print_string(va_list args); : Prototype of the function for printing a string.
-### print_int
--int print_int(va_list args); : Prototype function for printing an integer.
-### _putchar
--int _putchar(char c); : Prototype function for writing a character to standard output.
-### print_percent
--int print_percent(va_list args); : Prototype function for printing a percentage symbol.
+Adding advanced features such as redirection, pipes, and script handling.
+
+Support for built-in commands and special characters.
 
 ## functions_tools
 
-functions_tools.c contains utility functions that are crucial to the proper operation of the _printf function.
-
-## Important points in the code
-
-Handling negative integers and INT_MIN: The print_int function handles negative integers and the special case of INT_MIN by using an unsigned int.
-
-Use of arrays to store integer digits: The print_int function uses an int_digits array to store the digits of an integer before printing them.
-
-print_func structure : The print_func structure associates format specifiers with the corresponding print functions.
+tools2.c contains utility functions that are crucial to the proper operation of the _printf function.
 
 ## valgrind and test
 
+```c
+valgrind --leak-check=full ./hsh
+```
 
 ## man page
 
 
 
 ## flowchart
-
 
 
 
