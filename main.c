@@ -69,7 +69,6 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 	if (pid == 0) /* Child process */
 	{
 		if (execve(command_path, argv, environ) == -1)
-
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n", program_name, argv[0]);
 			exit(127);
@@ -159,13 +158,12 @@ void process_input(char *argv[])
 			free(args);
 			continue;
 		}
-
+		
 		command = find_command(args[0]);
 		if (!command)
 			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
 		else
 			execute_command(args, command, argv[0]);
-
 		free(args);
 	}
 	free(line);

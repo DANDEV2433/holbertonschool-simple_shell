@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "../../hbtn_ls /var" | ./hsh
+echo "/root/holbertonschool-simple_shell/hbtn_ls /var" | ./hsh
