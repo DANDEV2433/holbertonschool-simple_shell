@@ -27,7 +27,6 @@ char *find_command(char *command)
 		return (NULL);
 	}
 
-	/* Command is already an absolute path or executable in current dir */
 	if (command[0] == '/' || access(command, X_OK) == 0)
 		return (command);
 
@@ -52,7 +51,7 @@ char *find_command(char *command)
 	}
 
 	free(path_env_copy);
-	return (NULL);
+return (NULL);
 }
 
 /**
@@ -68,6 +67,7 @@ void execute_command(char *argv[], char *command_path, char *program_name)
 	if (pid == 0) /* Child process */
 	{
 		if (execve(command_path, argv, environ) == -1)
+
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n", program_name, argv[0]);
 			exit(EXIT_FAILURE);
