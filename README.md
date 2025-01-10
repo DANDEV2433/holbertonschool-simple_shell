@@ -48,8 +48,12 @@ Hello, World!
 $ ^D
 ```
 ## Interactive mode
+![Capture d'écran 2025-01-10 203844](https://github.com/user-attachments/assets/885ce1bc-55ab-47d2-9a66-f46500fde1f8)
+
 
 ## Non interactive mode
+![Capture d'écran 2025-01-10 204010](https://github.com/user-attachments/assets/2cbb0830-4e88-49bd-92a9-451ad0919d1a)
+
 
 ## Future Features
 
@@ -66,13 +70,11 @@ tools2.c contains utility functions that are crucial to the proper operation of 
 ```c
 valgrind --leak-check=full ./hsh
 ```
-
-## man page
-
-
+![Capture d'écran 2025-01-10 202830](https://github.com/user-attachments/assets/62db1657-3cb5-4f48-b4e2-df9b5f1d70f0)
 
 ## flowchart
 
+![Capture d'écran 2025-01-10 214127](https://github.com/user-attachments/assets/3f8bc8cc-093f-494c-9461-1d9863640787)
 
 
 ## Authors
