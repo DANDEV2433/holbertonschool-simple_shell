@@ -36,16 +36,18 @@ char **split_line(char *line)
 }
 
 /**
- * handle_env - handle environment
+ * handle_env_builtin - handle environment
  * @args: arguments
  * @environ: The environment variables
  * Return: 1 if 'env' was handled or 0.
  */
 int handle_env_builtin(char **args, char **environ)
 {
+	int i;
+
 	if (args[0] && strcmp(args[0], "env") == 0)
 	{
-		for (int i = 0; environ[i] != NULL; i++)
+		for (i = 0; environ[i] != NULL; i++)
 		{
 			printf("%s\n", environ[i]); /* Print each environment variable */
 		}
