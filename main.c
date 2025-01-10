@@ -154,11 +154,19 @@ void process_input(char *argv[])
 			continue;
 		}
 
+		if (handle_env_builtin(args, environ))
+		{
+			free(args);
+			continue;
+		}
+
 		command = find_command(args[0]);
 		if (!command)
 			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
 		else
 			execute_command(args, command, argv[0]);
+
+		free(args);
 	}
 	free(line);
 }
