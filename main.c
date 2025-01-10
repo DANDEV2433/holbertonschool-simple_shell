@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+#define _GNU_SOURCEi
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@
  */
 char *find_command(char *command)
 {
-	char *path_env = getenv("PATH");
+	char *path_env = _getenv("PATH");
 	char *path_env_copy, *path;
 	static char full_path[MAX_PATH_LEN];
 
